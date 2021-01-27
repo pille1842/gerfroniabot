@@ -1,3 +1,5 @@
 *.db
 *.db-journal
 __pycache__
+/env
+.env
