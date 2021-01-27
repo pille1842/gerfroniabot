@@ -51,7 +51,13 @@ class Bierjunge(Cog):
         await ctx.send(f":beer: {ctx.author.display_name} hat {member.mention} einen Bierjungen angehängt! {member.display_name} muss innerhalb"
                     f" von 5 Bierminuten mit {os.getenv('PREFIX')}hängt antworten, sonst wird er zum ersten Mal getreten.")
 
-        self.bot.scheduler.add_job(self.send_kick, trigger='interval', args=[ctx, ctx.author, member, 0], minutes=3, end_date=datetime.now()+timedelta(minutes=10))
+        self.bot.scheduler.add_job(
+            self.send_kick,
+            trigger='interval',
+            args=[ctx, ctx.author, member, 0],
+            minutes=3,
+            end_date=datetime.now()+timedelta(minutes=10)
+        )
         self.bierjungen[ctx.author, member, 0] = {"num_of_kicks": 0}
 
     @command(name="hängt", aliases=["ht"], brief="Nimm einen geforderten Bierjungen an")
@@ -86,12 +92,19 @@ class Bierjunge(Cog):
 
                 await ctx.send(f":beer: {ctx.author.display_name} hat die Forderung von {party_a.mention} verdoppelt."
                                f" Der {self.BJ_LEVELS[bj_level]} ist jetzt ein {self.BJ_LEVELS[bj_level+1]}."
-                               f" {party_a.mention}, du bist jetzt der Geforderte und musst innerhalb von 5 Bierminuten mit {os.getenv('PREFIX')}hängt antworten."
+                               f" {party_a.mention}, du bist jetzt der Geforderte und musst innerhalb von"
+                               f" 5 Bierminuten mit {os.getenv('PREFIX')}hängt antworten."
                                f" Ansonsten fährst du in den Bierverschiss.")
 
                 self.bierjungen.pop((party_a, party_b, bj_level))
                 self.bierjungen[party_b, party_a, bj_level + 1] = {"num_of_kicks": 0}
-                self.bot.scheduler.add_job(self.send_kick, trigger='interval', args=[ctx, party_b, party_a, bj_level], minutes=10, end_date=datetime.now()+timedelta(minutes=4))
+                self.bot.scheduler.add_job(
+                    self.send_kick,
+                    trigger='interval',
+                    args=[ctx, party_b, party_a, bj_level],
+                    minutes=3,
+                    end_date=datetime.now()+timedelta(minutes=10)
+                )
                 return
         await ctx.send(f":beer: Gegen dich besteht keine Forderung, die du verdoppeln könntest.")
 
