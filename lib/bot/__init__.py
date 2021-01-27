@@ -2,11 +2,10 @@ from ..db import db
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from asyncio import sleep
 from discord import Embed, Intents, VoiceChannel, FFmpegAudio
-from discord.ext.commands import Bot as BotBase
-from discord.ext.commands import command
 from discord.errors import Forbidden, HTTPException
-from discord.ext.commands.errors import MissingPermissions
+from discord.ext.commands import Bot as BotBase
 from discord.ext.commands import CommandNotFound, BadArgument, MissingRequiredArgument, CommandOnCooldown
+from discord.ext.commands.errors import MissingPermissions
 from glob import glob
 import logging
 import os
@@ -75,7 +74,6 @@ class Bot(BotBase):
             await self.voiceclient.disconnect_voice()
             self.voiceclient = None
 
-
     async def on_connect(self):
         self.log.info("Bot connected")
 
@@ -92,7 +90,9 @@ class Bot(BotBase):
         if isinstance(exc, IGNORE_EXCEPTIONS):
             pass
         elif isinstance(exc, CommandOnCooldown):
-            await ctx.send(f":stopwatch: Bitte warte {str(int(exc.retry_after / 60)) + ' Minuten' if exc.retry_after > 60 else str(int(exc.retry_after)) + ' Sekunden'}, bevor du diesen Befehl erneut benutzen kannst.")
+            await ctx.send(f":stopwatch: Bitte warte "
+                           f"{str(int(exc.retry_after / 60)) + ' Minuten' if exc.retry_after > 60 else str(int(exc.retry_after)) + ' Sekunden'}, "
+                           f"bevor du diesen Befehl erneut benutzen kannst.")
         elif hasattr(exc, "original"):
             if isinstance(exc.original, HTTPException):
                 await ctx.send("Konnte die Nachricht nicht absenden.")
