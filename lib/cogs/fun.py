@@ -5,7 +5,6 @@ from discord.ext.commands import command, has_permissions, cooldown
 from discord.ext.commands.errors import MissingPermissions
 from random import choice, randint
 import logging
-import os
 
 class Fun(Cog):
     def __init__(self, bot):
