@@ -58,17 +58,6 @@ class Bot(BotBase):
         self.log.info("Running bot")
         super().run(self.TOKEN, reconnect=True)
 
-    @command(name="badnerlied")
-    async def badnerlied(self, ctx):
-        self.log.info("Badnerlied was requested")
-        if not self.voiceclient:
-            voicechannel = self.get_channel(607935231894224908)
-            textchannel = self.get_channel(int(os.getenv("BOTCONTROL_CHANNEL_ID")))
-            self.voiceclient = await voicechannel.connect()
-            audio_source = FFmpegAudio('../../data/badnerlied.mp3')
-            if not self.voiceclient.is_playing():
-                await self.voiceclient.play(audio_source, after=self.disconnect_voice)
-
     async def disconnect_voice(self, err):
         if self.voiceclient:
             await self.voiceclient.disconnect_voice()
@@ -83,8 +72,7 @@ class Bot(BotBase):
     async def on_error(self, err, *args, **kwargs):
         if err == "on_command_error":
             await args[0].send("Da ist leider etwas schiefgelaufen.")
-
-        raise
+            self.log.error(err, args)
 
     async def on_command_error(self, ctx, exc):
         if isinstance(exc, IGNORE_EXCEPTIONS):
@@ -96,6 +84,7 @@ class Bot(BotBase):
         elif hasattr(exc, "original"):
             if isinstance(exc.original, HTTPException):
                 await ctx.send("Konnte die Nachricht nicht absenden.")
+                self.log.error(exc.original)
             elif isinstance(exc.original, Forbidden):
                 await ctx.send("Ich bin leider nicht berechtigt, das zu tun.")
             else:

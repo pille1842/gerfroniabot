@@ -57,6 +57,12 @@ class Help(Cog):
         self.log = logging.getLogger("gerfroniabot.help")
         self.bot.remove_command("help")
 
+    @Cog.listener()
+    async def on_ready(self):
+        if not self.bot.ready:
+            self.bot.cogs_ready.ready_up("help")
+            self.log.info("Help cog ready")
+
     async def cmd_help(self, ctx, command):
         embed = Embed(
             title=f"Hilfe zu `{command}`",
@@ -98,12 +104,6 @@ class Help(Cog):
                 await self.cmd_help(ctx, command)
             else:
                 await ctx.send("Diesen Befehl kenne ich nicht.")
-
-    @Cog.listener()
-    async def on_ready(self):
-        if not self.bot.ready:
-            self.bot.cogs_ready.ready_up("help")
-            self.log.info("Help cog ready")
 
 def setup(bot):
     bot.add_cog(Help(bot))

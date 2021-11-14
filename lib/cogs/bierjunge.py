@@ -15,6 +15,12 @@ class Bierjunge(Cog):
         self.bierverschiss = []
         self.bierkrank = []
 
+    @Cog.listener()
+    async def on_ready(self):
+        if not self.bot.ready:
+            self.bot.cogs_ready.ready_up("bierjunge")
+            self.log.info("Bierjunge cog ready")
+
     @command(name="bierjunge", aliases=["bj"], brief="Hänge einem Mitglied einen Bierjungen an")
     @cooldown(1, 5*60, BucketType.user)
     async def declare_bierjunge(self, ctx, member: Member):
@@ -148,7 +154,7 @@ class Bierjunge(Cog):
         await ctx.send(f":beer: Wer ist bierehrlich? {member.mention}! Was ist {member.display_name}? Bierehrlich!")
         self.bierverschiss.remove(member)
 
-    @command("listebv", aliases=[], brief="Zeige alle Mitglieder im Bierverschiss")
+    @command("listebv", aliases=["lsbv"], brief="Zeige alle Mitglieder im Bierverschiss")
     async def list_bierverschiss(self, ctx):
         """
         Dieser Befehl zeigt eine Bierschissertafel an, auf der alle Mitglieder verzeichnet sind,
@@ -174,6 +180,9 @@ class Bierjunge(Cog):
 
         await ctx.send(f":cup_with_straw: {ctx.author.display_name} hat sich für bierkrank erklärt.")
         self.bierkrank.append(ctx.author)
+        if ctx.author in self.bierverschiss:
+            self.bierverschiss.remove(ctx.author)
+            await ctx.send(f":beer: {ctx.author.display_name} wurde automatisch aus dem Bierverschiss entfernt.")
         await self.remove_all_bierjungen(ctx, ctx.author)
 
     @command("biergesund", aliases=["bg"], brief="Erkläre deine Bierkrankheit für beendet")
@@ -188,6 +197,18 @@ class Bierjunge(Cog):
         else:
             await ctx.send(f":cup_with_straw: Du bist nicht bierkrank gemeldet.")
 
+    @command("listebk", aliases=["lsbk"], brief="Zeige alle bierkranken Mitglieder")
+    async def list_bierkrank(self, ctx):
+        """
+        Dieser Befehl zeigt eine Bierkrankentafel an, auf der alle Mitglieder verzeichnet sind,
+        die momentan bierkrank gemeldet sind.
+        """
+        if not self.bierkrank:
+            await ctx.send(":cup_with_straw: Es befindet sich derzeit niemand im Bierverschiss.")
+            return
+        embed = Embed(title="Bierkrankentafel", description="Die folgenden Mitglieder sind bierkrank gemeldet.")
+        embed.add_field(name="Name", value=", ".join(m.display_name for m in self.bierkrank))
+        await ctx.send(embed=embed)
 
     async def send_kick(self, ctx, party_a, party_b, bj_level):
         bj = self.bierjungen[party_a, party_b, bj_level]

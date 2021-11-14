@@ -11,6 +11,12 @@ class Fun(Cog):
         self.bot = bot
         self.log = logging.getLogger("gerfroniabot.fun")
 
+    @Cog.listener()
+    async def on_ready(self):
+        if not self.bot.ready:
+            self.bot.cogs_ready.ready_up("fun")
+            self.log.info("Fun cog ready")
+
     @command(name="hallo", aliases=["hi"], brief="Grüße den Benutzer des Befehls")
     async def say_hello(self, ctx):
         """
@@ -75,12 +81,6 @@ class Fun(Cog):
                 await ctx.send(embed=embed)
             else:
                 await ctx.send(":fox_face: Ich konnte leider keinen Zufallsfux generieren.")
-
-    @Cog.listener()
-    async def on_ready(self):
-        if not self.bot.ready:
-            self.bot.cogs_ready.ready_up("fun")
-            self.log.info("Fun cog ready")
 
 def setup(bot):
     bot.add_cog(Fun(bot))
