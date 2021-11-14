@@ -105,5 +105,13 @@ class Help(Cog):
             else:
                 await ctx.send("Diesen Befehl kenne ich nicht.")
 
+    @command(name="version", aliases=["v"], brief="Zeige die Version des Bots an")
+    async def show_version(self, ctx):
+        """
+        Zeige die aktuelle Version des Bots und Copyright-Informationen an.
+        """
+
+        await ctx.send(f":robot: GerfroniaBot Version {self.bot.VERSION}\n\nCopyright © 2021 Eric Haberstroh <pille@pv-teutonia.org>")
+
 def setup(bot):
     bot.add_cog(Help(bot))
