@@ -85,7 +85,7 @@ class Guestbook(Cog):
                 self.log.debug(session)
                 found_session = after.channel.id
                 self.sessions[found_session] = session
-                message = await self.guestbook_channel.send(embed=self.create_guestbook_embed(after.channel.name, datetime.now(), [member]))
+                message = await self.guestbook_channel.send(embed=self.create_guestbook_embed(after.channel.name, datetime.utcnow(), [member]))
                 self.sessions[found_session]["message_id"] = message.id
             else:
                 self.log.debug("Updating existing session %s", found_session)
