@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from lib.bot import Bot
 from dotenv import load_dotenv, find_dotenv
 import logging
