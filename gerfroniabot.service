@@ -1,0 +1,11 @@
+# Example service file for systemd
+[Unit]
+Description=GerfroniaBot
+
+[Service]
+ExecStart=/home/user/gerfroniabot/launcher.py
+WorkingDirectory=/home/user/gerfroniabot
+Restart=always
+
+[Install]
+WantedBy=default.target
