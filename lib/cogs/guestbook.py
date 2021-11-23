@@ -91,7 +91,7 @@ class Guestbook(Cog):
                 self.log.debug("Updating existing session %s", found_session)
                 if len(self.sessions[found_session]["participants"]) == 1:
                     # This is a new session where only the second member joined. Inform everyone!
-                    await self.main_channel.send(content=":microphone2: Im Kanal #%s findet ein Sprachchat statt!" % after.channel.name)
+                    await self.main_channel.send(content=":microphone2: **Im Kanal %s findet ein Sprachchat statt!**" % after.channel.name)
                 self.sessions[found_session]["participants"].append(member)
                 self.log.debug("Participants of session %s: %s", found_session, ", ".join(["{member.name}" for member in self.sessions[found_session]["participants"]]))
                 message = await self.guestbook_channel.fetch_message(self.sessions[found_session]["message_id"])
@@ -102,7 +102,7 @@ class Guestbook(Cog):
 
     def create_guestbook_embed(self, channel, date, participants):
         embed = Embed(
-            title=":book: Stammtisch im Kanal #%s" % channel,
+            title=":book: Stammtisch im Kanal %s" % channel,
             description=f"",
             timestamp=date,
             colour=Colour.dark_grey()
