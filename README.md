@@ -22,7 +22,7 @@ The `requirements.txt` file contains a list of all Python packages this bot reli
 requirements with the following command:
 
 ```bash
-$ pip install -r requirements.txt
+$ sudo -H pip install -r requirements.txt
 ```
 
 ### Copy the .env.example file and adjust settings
