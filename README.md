@@ -69,7 +69,7 @@ $ systemctl --user start gerfroniabot.service
 ```
 
 To see if any errors occurred, run `systemctl --user status gerfroniabot.service` or look at all the log
-messages with``journalctl --user --unit=gerfroniabot.service`.
+messages with `journalctl --user --unit=gerfroniabot.service`.
 
 If you want to permanently enable your bot and have it start running automatically together with the system,
 you first need to enable lingering (so that systemd will start your user services even if you are not currently
