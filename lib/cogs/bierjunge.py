@@ -11,6 +11,8 @@ class Bierjunge(Cog):
     def __init__(self, bot):
         self.bot = bot
         self.log = logging.getLogger("gerfroniabot.bierjunge")
+        self.QUARANTINE_CHANNEL_ID = int(os.getenv("QUARANTINE_CHANNEL_ID"))
+        self.MAIN_CHANNEL_ID = int(os.getenv("MAIN_CHANNEL_ID"))
         self.bierjungen = {}
         self.bierverschiss = []
         self.bierkrank = []
@@ -127,6 +129,7 @@ class Bierjunge(Cog):
             return
 
         await ctx.send(f":beer: {ctx.author.display_name} hat {member.mention} in den Bierverschiss geschickt.")
+        await member.edit(voice_channel=self.bot.guild.get_channel(self.QUARANTINE_CHANNEL_ID))
         self.bierverschiss.append(member)
         await self.remove_all_bierjungen(ctx, member)
 
@@ -235,6 +238,12 @@ class Bierjunge(Cog):
                 await ctx.send(f":beer: Der {self.BJ_LEVELS[bj_level]} zwischen {party_a.display_name} und {party_b.display_name} wurde abgebrochen.")
                 self.bierjungen.pop((party_a, party_b, bj_level))
                 return
+
+    @Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        if member in self.bierverschiss and after.channel is not None and after.channel.id != self.QUARANTINE_CHANNEL_ID:
+            await member.move_to(self.bot.guild.get_channel(self.QUARANTINE_CHANNEL_ID))
+            await self.bot.guild.get_channel(self.MAIN_CHANNEL_ID).send(f":poop: **{member.display_name} hat versucht, aus dem Bierverschiss auszubrechen!**")
 
 def setup(bot):
     bot.add_cog(Bierjunge(bot))

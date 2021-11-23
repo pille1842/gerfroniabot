@@ -49,6 +49,8 @@ HELP_COMMANDS_PER_PAGE=5
 GUESTBOOK_CHANNEL_ID=
 # ID of the main channel of your guild (voice chat notifications will be sent here)
 MAIN_CHANNEL_ID=
+# ID of a quarantine channel where naughty members can be kept forever
+QUARANTINE_CHANNEL_ID=
 ```
 
 ### Run launcher.py to test your bot

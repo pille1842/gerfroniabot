@@ -9,6 +9,7 @@ class Guestbook(Cog):
         self.bot = bot
         self.log = logging.getLogger('gerfroniabot.guestbook')
         self.GUESTBOOK_CHANNEL_ID = int(os.getenv("GUESTBOOK_CHANNEL_ID"))
+        self.QUARANTINE_CHANNEL_ID = int(os.getenv("QUARANTINE_CHANNEL_ID"))
         self.MAIN_CHANNEL_ID = int(os.getenv("MAIN_CHANNEL_ID"))
         self.guestbook_channel = None
         self.main_channel = None
@@ -52,7 +53,10 @@ class Guestbook(Cog):
         else:
             after_id = after.channel.id
         if before_id != after_id:
-        #if before.channel is None and after.channel is not None:
+            if after_id == self.QUARANTINE_CHANNEL_ID:
+                self.log.debug("Ignoring voice status change because after channel is quarantine channel")
+                # Don't keep a guestbook for the quarantine channel
+                return
             found_session = None
             self.log.debug("Checking all sessions: %s", self.sessions)
             # Member has joined a channel.
